@@ -1,0 +1,25 @@
+# -*- coding:utf-8-unix; -*-
+
+# By default, always normalize files to native line endings,
+# except sources
+[attr]source text=auto, eol=lf
+
+# Documentation and other kinds of text
+*.md text
+
+# C source files
+*.c source
+*.h source
+*.h.in source
+
+.dirlocals.el source
+.gitignore source
+.gitattributes source
+CMakeLists.txt source
+
+# Binary files
+*.bmp  binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary

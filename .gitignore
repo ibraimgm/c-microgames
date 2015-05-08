@@ -1,0 +1,25 @@
+# -*- coding:utf-8-unix; -*-
+
+# binaries to ignore
+*.o
+*.a
+*.exe
+*.dll
+build/
+
+# auto-generated files
+config.h
+package_ver.h
+
+# CMake files
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+# Autoconf files
+configure
+config.log
+config.status
+autom4te.cache/
+*.d
