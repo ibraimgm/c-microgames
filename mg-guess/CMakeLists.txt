@@ -23,7 +23,7 @@ configure_file (
   "${CMAKE_CURRENT_SOURCE_DIR}/src/config.h"
   )
 
-add_executable(mg-guess
+add_executable(guess-my-number
   src/main.c
   src/config.h
   )
