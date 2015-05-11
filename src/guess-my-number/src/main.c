@@ -22,10 +22,31 @@
 #include <stdio.h>
 #include "config.h"
 
+#define MAX_NUMBER 100
+
 int main(int argc, char **argv)
 {
   printf(APP_HEADER);
-  printf("It worked.\n");
+  int min = 0, max = MAX_NUMBER;
+  int guess; char answer;
+
+  do
+  {
+    guess = min + (max - min) / 2;
+    printf("Did you choose %d? (>, <, =) ", guess);
+    fflush(stdout);
+    answer = getc(stdin); getc(stdin);
+
+    if (answer == '>')
+      min = guess + 1;
+    else if (answer == '<')
+      max = guess - 1;
+  } while ((answer != '=') && (max >= min));
+
+  if (answer == '=')
+    printf("Yep, I guessed the number: %d!\n", guess);
+  else if (max < min)
+    printf("Hey! You cheated!");
 
   return 0;
 }
