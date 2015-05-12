@@ -12,24 +12,35 @@ set(PROJECT_CANONICAL_NAME consio)
 set(PROJECT_COPYRIGHT_YEAR 2015)
 set(PROJECT_COPYRIGHT_AUTHOR "Rafael Ibraim")
 
-# special flags
-IF(WIN32)
-  add_definitions(-DWINDOWS)
-ELSEIF(UNIX)
-  add_definitions(-DUNIX)
-ENDIF()
-
 # generate version info, etc.
 configure_file (
   "${CMAKE_CURRENT_SOURCE_DIR}/include/consio.h.in"
   "${CMAKE_CURRENT_SOURCE_DIR}/include/consio.h"
   )
 
-# library target
-add_library(consio SHARED
+# sources, headers, etc
+set(CONSIO_SOURCES
   include/consio.h
   include/consio_input.h
   src/consio_input.c
   )
 
-target_include_directories(consio PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(CONSIO_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# main target config
+add_library(consio SHARED ${CONSIO_SOURCES})
+target_include_directories(consio PUBLIC ${CONSIO_INCLUDE_DIR})
+set_property(TARGET consio PROPERTY C_STANDARD 11)
+set_property(TARGET consio PROPERTY C_STANDARD_REQUIRED ON)
+
+# platform-specific flags
+IF(WIN32)
+  set_property(TARGET consio PROPERTY COMPILE_DEFINITIONS WINDOWS)
+ELSEIF(UNIX)
+  set_property(TARGET consio PROPERTY COMPILE_DEFINITIONS UNIX)
+ENDIF()
+
+# compiler-specific flags
+IF(CMAKE_C_COMPILER_ID MATCHES "GNU")
+  set_property(TARGET consio PROPERTY COMPILE_OPTIONS -Wall -Wextra -pedantic)
+ENDIF()

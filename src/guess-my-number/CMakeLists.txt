@@ -17,24 +17,33 @@ if (NOT IN_PACKAGE)
   SET(IN_PACKAGE 0)
 endif()
 
-# special flags
-IF(WIN32)
-  add_definitions(-DWINDOWS)
-ELSEIF(UNIX)
-  add_definitions(-DUNIX)
-ENDIF()
-
 # generate it's own config.h
 configure_file (
   "${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/config.h"
   )
 
-add_executable(guess-my-number
+# determine sources and libraries
+set(GUESS_SOURCES
   src/main.c
-  src/config.h
-  )
+  src/config.h)
 
-target_link_libraries(guess-my-number
-  consio
-  )
+set(GUESS_LIBS consio)
+
+# main target config
+add_executable(guess-my-number ${GUESS_SOURCES})
+target_link_libraries(guess-my-number ${GUESS_LIBS})
+set_property(TARGET guess-my-number PROPERTY C_STANDARD 11)
+set_property(TARGET guess-my-number PROPERTY C_STANDARD_REQUIRED ON)
+
+# platform-specific flags
+IF(WIN32)
+  set_property(TARGET guess-my-number PROPERTY COMPILE_DEFINITIONS WINDOWS)
+ELSEIF(UNIX)
+  set_property(TARGET guess-my-number PROPERTY COMPILE_DEFINITIONS UNIX)
+ENDIF()
+
+# compiler-specific flags
+IF(CMAKE_C_COMPILER_ID MATCHES "GNU")
+  set_property(TARGET guess-my-number PROPERTY COMPILE_OPTIONS -Wall -Wextra -pedantic)
+ENDIF()
