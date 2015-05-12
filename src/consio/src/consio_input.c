@@ -1,6 +1,6 @@
 // -*- coding:utf-8-unix; -*-
 /*
- * main.c
+ * consio_input.c
  * Copyright 2015 Rafael Ibraim <ibraim.gm@gmail.com>
  *
  * This file is part of C Microgames.
@@ -20,35 +20,36 @@
  */
 
 #include <stdio.h>
-#include "config.h"
-#include "consio.h"
+#include <string.h>
+#include "consio_input.h"
 
-#define MAX_NUMBER 100
 
-int main(int argc, char **argv)
+#ifdef WINDOWS
+#include <conio.h>
+
+int getch()
 {
-  printf(APP_HEADER);
-  int min = 0, max = MAX_NUMBER;
-  int guess; char answer;
+  return _getch();
+}
+
+int getche()
+{
+  return _getche();
+}
+
+#endif
+
+int getch_restrict_e(const char *valid_chars, bool echo)
+{
+  int c;
 
   do
   {
-    guess = min + (max - min) / 2;
-    printf("Did you choose %d? (>, <, =) ", guess);
-    fflush(stdout);
-    answer = getche_restrict("<>=");
-    printf("\n");
+    c = getch();
+  } while (!strchr(valid_chars, c));
 
-    if (answer == '>')
-      min = guess + 1;
-    else if (answer == '<')
-      max = guess - 1;
-  } while ((answer != '=') && (max >= min));
+  if (echo)
+    printf("%c", c);
 
-  if (answer == '=')
-    printf("Yep, I guessed the number: %d!\n", guess);
-  else if (max < min)
-    printf("Hey! You cheated!\n");
-
-  return 0;
+  return c;
 }

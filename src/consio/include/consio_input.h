@@ -1,6 +1,6 @@
-// -*- coding:utf-8-unix; -*-
+//  -*- coding:utf-8-unix; -*-
 /*
- * main.c
+ * consio_input.h
  * Copyright 2015 Rafael Ibraim <ibraim.gm@gmail.com>
  *
  * This file is part of C Microgames.
@@ -19,36 +19,20 @@
  * along with C Microgames.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
-#include "config.h"
-#include "consio.h"
+#ifndef CONSIO_INPUT_H
+#define CONSIO_INPUT_H
 
-#define MAX_NUMBER 100
+#include <stdbool.h>
 
-int main(int argc, char **argv)
-{
-  printf(APP_HEADER);
-  int min = 0, max = MAX_NUMBER;
-  int guess; char answer;
+// reads a character without buffering
+int getche();
 
-  do
-  {
-    guess = min + (max - min) / 2;
-    printf("Did you choose %d? (>, <, =) ", guess);
-    fflush(stdout);
-    answer = getche_restrict("<>=");
-    printf("\n");
+// reads a character without buffering and without echo
+int getch();
 
-    if (answer == '>')
-      min = guess + 1;
-    else if (answer == '<')
-      max = guess - 1;
-  } while ((answer != '=') && (max >= min));
+// reads a character from a restricted subset
+int getch_restrict_e(const char *valid_chars, bool echo);
+#define getche_restrict(valid_chars) getch_restrict_e(valid_chars, true)
+#define getch_restrict(valid_chars) getch_restrict_e(valid_chars, false)
 
-  if (answer == '=')
-    printf("Yep, I guessed the number: %d!\n", guess);
-  else if (max < min)
-    printf("Hey! You cheated!\n");
-
-  return 0;
-}
+#endif /* CONSIO_INPUT_H */

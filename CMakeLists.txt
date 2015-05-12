@@ -8,6 +8,7 @@ project(C_Microgames
 
 # make sure we support in-source and out-source builds
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 # tell the subprojects that they are inside a package
 set(IN_PACKAGE 1 CACHE BOOL "Build with subprojects enabled")
@@ -23,4 +24,5 @@ configure_file (
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
 # add every subproject
+add_subdirectory(src/consio)
 add_subdirectory(src/guess-my-number)
