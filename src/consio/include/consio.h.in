@@ -28,6 +28,7 @@
 #define CONSIO_VERSION_PATCH @PROJECT_VERSION_PATCH@
 
 #include "consio_input.h"
+#include "consio_output.h"
 
 
 #endif /* CONSIO_H */

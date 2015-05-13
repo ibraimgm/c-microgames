@@ -20,6 +20,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "config.h"
 #include "consio.h"
 
@@ -31,12 +32,26 @@ int main(int argc, char **argv)
   int min = 0, max = MAX_NUMBER;
   int guess; char answer;
 
+  atexit(resetSGR);
+
   do
   {
     guess = min + (max - min) / 2;
-    printf("Did you choose %d? (>, <, =) ", guess);
+
+    printf("Did you choose ");
+    setFG(VIVID_WHITE);  printf("%d", guess);
+    resetSGR();          printf("? (");
+    setFG(VIVID_RED);    printf(">");
+    resetSGR();          printf(", ");
+    setFG(VIVID_YELLOW); printf("<");
+    resetSGR();          printf(", ");
+    setFG(VIVID_CYAN);   printf("=");
+    resetSGR();          printf(") ");
     fflush(stdout);
+
+    setFG(VIVID_MAGENTA);
     answer = getche_restrict("<>=");
+    resetSGR();
     printf("\n");
 
     if (answer == '>')
@@ -46,9 +61,15 @@ int main(int argc, char **argv)
   } while ((answer != '=') && (max >= min));
 
   if (answer == '=')
+  {
+    setFG(VIVID_GREEN);
     printf("Yep, I guessed the number: %d!\n", guess);
+  }
   else if (max < min)
+  {
+    setFG(VIVID_RED);
     printf("Hey! You cheated!\n");
+  }
 
   return 0;
 }

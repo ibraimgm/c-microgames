@@ -22,7 +22,9 @@ configure_file (
 set(CONSIO_SOURCES
   include/consio.h
   include/consio_input.h
+  include/consio_output.h
   src/consio_input.c
+  src/consio_output.c
   )
 
 set(CONSIO_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
