@@ -24,6 +24,18 @@
 
 #include <stdbool.h>
 
+#ifndef HAVE_GETOPT_H
+#include "getopt.h"
+#else
+#include <getopt.h>
+#endif
+
+// handle getopt erros and exit
+void handle_getopt_err(int opt);
+
+// raise a getopt error and exit
+void raise_getopt_err(char *message);
+
 // reads a character without buffering
 int getche();
 

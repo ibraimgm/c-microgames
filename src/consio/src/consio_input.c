@@ -20,8 +20,33 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "consio_input.h"
+
+
+void handle_getopt_err(int opt)
+{
+  if (opt == ':')
+  {
+    fprintf (stderr, "ERROR: Option `-%c' requires an argument.\n", optopt);
+    fprintf(stderr, "Try `--help` for usage information.\n");
+    exit(1);
+  }
+  else if (opt == '?')
+  {
+    fprintf (stderr, "ERROR: Unrecognized option: `-%c'.\n", optopt);
+    fprintf(stderr, "Try `--help` for usage information.\n");
+    exit(1);
+  }
+}
+
+void raise_getopt_err(char *message)
+{
+  fprintf(stderr, "ERROR: %s\n", message);
+  fprintf(stderr, "Try `--help` for usage information.\n");
+  exit(1);
+}
 
 
 #ifdef WINDOWS

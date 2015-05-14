@@ -9,6 +9,7 @@ project(GuessMyNumber_Microgame
   )
 
 set(PROJECT_CANONICAL_NAME guess-my-number)
+set(PROJECT_SHORT_DESCRIPTION "A simple guessing game with the computer")
 set(PROJECT_COPYRIGHT_YEAR 2015)
 set(PROJECT_COPYRIGHT_AUTHOR "Rafael Ibraim")
 

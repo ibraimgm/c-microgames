@@ -1,6 +1,7 @@
 # -*- coding:utf-8-unix; -*-
 
 cmake_minimum_required(VERSION 3.0)
+include(CheckIncludeFile)
 
 # project information
 project(ConsIO
@@ -13,18 +14,28 @@ set(PROJECT_COPYRIGHT_YEAR 2015)
 set(PROJECT_COPYRIGHT_AUTHOR "Rafael Ibraim")
 
 # generate version info, etc.
+check_include_file("getopt.h" HAVE_GETOPT_H)
+
 configure_file (
   "${CMAKE_CURRENT_SOURCE_DIR}/include/consio.h.in"
   "${CMAKE_CURRENT_SOURCE_DIR}/include/consio.h"
   )
 
 # sources, headers, etc
+IF(NOT HAVE_GETOPT_H)
+  set(CONSIO_GETOPT_SOURCES
+    include/getopt.h
+    src/getopt_long.c
+    )
+ENDIF()
+
 set(CONSIO_SOURCES
   include/consio.h
   include/consio_input.h
   include/consio_output.h
   src/consio_input.c
   src/consio_output.c
+  ${CONSIO_GETOPT_SOURCES}
   )
 
 set(CONSIO_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)

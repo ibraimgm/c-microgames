@@ -27,6 +27,10 @@
 #define CONSIO_VERSION_MINOR @PROJECT_VERSION_MINOR@
 #define CONSIO_VERSION_PATCH @PROJECT_VERSION_PATCH@
 
+#ifndef HAVE_GETOPT_H
+#cmakedefine HAVE_GETOPT_H
+#endif
+
 #include "consio_input.h"
 #include "consio_output.h"
 

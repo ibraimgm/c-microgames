@@ -21,15 +21,67 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "config.h"
 #include "consio.h"
 
 #define MAX_NUMBER 100
 
+static struct option long_options[] =
+{
+  {"version", no_argument, NULL, 'v'},
+  {"help", no_argument, NULL, 'h'},
+  {"max", required_argument, NULL, 'm'},
+  {0, 0, 0, 0}
+};
+
 int main(int argc, char **argv)
 {
-  printf(APP_HEADER);
-  int min = 0, max = MAX_NUMBER;
+  // parse command line options
+  bool show_version = false, show_help = false;
+  int max = MAX_NUMBER;
+
+  opterr = 0;
+  int opt, long_index = 0;
+  while ((opt = getopt_long(argc, argv, ":vhm:", long_options, &long_index)) != -1)
+    switch (opt)
+    {
+      case 'v': show_version = true; break;
+      case 'h': show_help = true; break;
+
+      case 'm':
+        max = atoi(optarg);
+        if (max <= 0)
+          raise_getopt_err("maximum number must be greater than 0.");
+        break;
+
+      default: handle_getopt_err(opt);
+    };
+
+  // display version
+  if (show_version)
+  {
+    printf(APP_HEADER);
+    return 0;
+  }
+
+  // display usage
+  if (show_help)
+  {
+    printf(APP_DISPLAY_NAME " - " APP_SHORT_DESCRIPTION "\n");
+    printf("Usage: %s [OPTIONS]\n", APP_CANONICAL_NAME);
+    printf("Options:\n");
+    printf("  --version Display version information and exit.\n");
+    printf("            (Short: `-v`)\n");
+    printf("  --help    Display this help text.\n");
+    printf("            (Short: `-h`)\n");
+    printf("  --max [N] Set the maximum number to guess to N (default = %d).\n", MAX_NUMBER);
+    printf("            (Short: `-m`)\n");
+    return 0;
+  }
+
+  // from now on, everything looks ok!
+  int min = 0;
   int guess; char answer;
 
   atexit(resetSGR);
