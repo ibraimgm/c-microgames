@@ -25,17 +25,17 @@
 #include "consio_input.h"
 
 
-void handle_getopt_err(int opt)
+void handle_getopt_err(int opt_status, int opt_value)
 {
-  if (opt == ':')
+  if (opt_status == ':')
   {
-    fprintf (stderr, "ERROR: Option `-%c' requires an argument.\n", optopt);
+    fprintf (stderr, "ERROR: Option `-%c' requires an argument.\n", opt_value);
     fprintf(stderr, "Try `--help` for usage information.\n");
     exit(1);
   }
-  else if (opt == '?')
+  else if (opt_status == '?')
   {
-    fprintf (stderr, "ERROR: Unrecognized option: `-%c'.\n", optopt);
+    fprintf (stderr, "ERROR: Unrecognized option: `-%c'.\n", opt_value);
     fprintf(stderr, "Try `--help` for usage information.\n");
     exit(1);
   }

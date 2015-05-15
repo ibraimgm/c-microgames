@@ -36,7 +36,7 @@
 #endif
 
 // handle getopt erros and exit
-void handle_getopt_err(int opt);
+void handle_getopt_err(int opt_status, int opt_value);
 
 // raise a getopt error and exit
 void raise_getopt_err(char *message);

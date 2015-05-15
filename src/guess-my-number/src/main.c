@@ -55,7 +55,7 @@ int main(int argc, char **argv)
           raise_getopt_err("maximum number must be greater than 0.");
         break;
 
-      default: handle_getopt_err(opt);
+      default: handle_getopt_err(opt, optopt);
     };
 
   // display version
