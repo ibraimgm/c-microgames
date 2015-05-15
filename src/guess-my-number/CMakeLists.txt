@@ -37,13 +37,6 @@ target_link_libraries(guess-my-number ${GUESS_LIBS})
 set_property(TARGET guess-my-number PROPERTY C_STANDARD 11)
 set_property(TARGET guess-my-number PROPERTY C_STANDARD_REQUIRED ON)
 
-# platform-specific flags
-IF(WIN32)
-  set_property(TARGET guess-my-number PROPERTY COMPILE_DEFINITIONS WINDOWS)
-ELSEIF(UNIX)
-  set_property(TARGET guess-my-number PROPERTY COMPILE_DEFINITIONS UNIX)
-ENDIF()
-
 # compiler-specific flags
 IF(CMAKE_C_COMPILER_ID MATCHES "GNU")
   set_property(TARGET guess-my-number PROPERTY COMPILE_OPTIONS -Wall -Wextra -pedantic)

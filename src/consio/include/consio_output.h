@@ -22,6 +22,7 @@
 #ifndef CONSIO_OUTPUT_H
 #define CONSIO_OUTPUT_H
 
+#include "consio_config.h"
 #include <stdbool.h>
 
 extern const int COLOR_UNCHANGED;

@@ -1,6 +1,6 @@
 // -*- coding:utf-8-unix; -*-
 /*
- * consio.h
+ * consio_config.h
  * Copyright 2015 Rafael Ibraim <ibraim.gm@gmail.com>
  *
  * This file is part of C Microgames.
@@ -19,20 +19,17 @@
  * along with C Microgames.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CONSIO_H
-#define CONSIO_H
+#ifndef CONSIO_CONFIG_H
+#define CONSIO_CONFIG_H
 
 #define CONSIO_VERSION_STR "@PROJECT_VERSION@"
 #define CONSIO_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
 #define CONSIO_VERSION_MINOR @PROJECT_VERSION_MINOR@
 #define CONSIO_VERSION_PATCH @PROJECT_VERSION_PATCH@
 
-#ifndef HAVE_GETOPT_H
 #cmakedefine HAVE_GETOPT_H
-#endif
+#cmakedefine HAVE_CONIO_H
+#cmakedefine HAVE_GETCH
+#cmakedefine USE_WINDOWS_CONSOLE_API
 
-#include "consio_input.h"
-#include "consio_output.h"
-
-
-#endif /* CONSIO_H */
+#endif /* CONSIO_CONFIG_H */

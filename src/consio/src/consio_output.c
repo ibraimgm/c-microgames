@@ -19,13 +19,14 @@
  * along with C Microgames.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef WINDOWS
+#include "consio_output.h"
+
+#ifdef USE_WINDOWS_CONSOLE_API
 #include <windows.h>
 #endif
 
 #include <stdbool.h>
 #include <assert.h>
-#include "consio_output.h"
 
 // Values and offsets according to ANSI
 #define LAYER_FOREGROUND 30
@@ -63,7 +64,7 @@ const int VIVID_MAGENTA = INTENSITY_VIVID + COLOR_MAGENTA;
 const int VIVID_CYAN    = INTENSITY_VIVID + COLOR_CYAN;
 const int VIVID_WHITE   = INTENSITY_VIVID + COLOR_WHITE;
 
-#ifdef WINDOWS
+#ifdef USE_WINDOWS_CONSOLE_API
 static HANDLE hconsole = 0;
 static WORD last_bg;
 static WORD last_fg;
@@ -215,10 +216,7 @@ void set_cursor_visibility(bool visible)
   cursor.bVisible = visible;
   SetConsoleCursorInfo(get_console_handle(), &cursor);
 }
-
-#endif
-
-#ifdef UNIX
+#else
 void resetSGR();
 void setSGR(int foreground, int background);
 

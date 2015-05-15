@@ -49,9 +49,7 @@ void raise_getopt_err(char *message)
 }
 
 
-#ifdef WINDOWS
-#include <conio.h>
-
+#if defined(HAVE_CONIO_H) && !defined(HAVE_GETCH)
 int getch()
 {
   return _getch();
@@ -61,7 +59,8 @@ int getche()
 {
   return _getche();
 }
-
+#elsif !defined(HAVE_CONIO_H)
+#error getch() / getche() not implemented
 #endif
 
 int getch_restrict_e(const char *valid_chars, bool echo)

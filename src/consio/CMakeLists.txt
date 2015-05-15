@@ -2,6 +2,7 @@
 
 cmake_minimum_required(VERSION 3.0)
 include(CheckIncludeFile)
+include(CheckSymbolExists)
 
 # project information
 project(ConsIO
@@ -14,12 +15,22 @@ set(PROJECT_COPYRIGHT_YEAR 2015)
 set(PROJECT_COPYRIGHT_AUTHOR "Rafael Ibraim")
 
 # generate version info, etc.
-check_include_file("getopt.h" HAVE_GETOPT_H)
+check_include_file(getopt.h HAVE_GETOPT_H)
+check_include_file(conio.h HAVE_CONIO_H)
+check_symbol_exists(getch conio.h HAVE_GETCH)
+check_symbol_exists(GetStdHandle windows.h USE_WINDOWS_CONSOLE_API)
 
 configure_file (
-  "${CMAKE_CURRENT_SOURCE_DIR}/include/consio.h.in"
-  "${CMAKE_CURRENT_SOURCE_DIR}/include/consio.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/include/consio_config.h.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/include/consio_config.h"
   )
+
+# it's a huge pain to make a shared DLL using MSVC
+IF(MSVC)
+  set(BUILD_TYPE STATIC)
+ELSE()
+  set(BUILD_TYPE SHARED)
+ENDIF()
 
 # sources, headers, etc
 IF(NOT HAVE_GETOPT_H)
@@ -30,6 +41,7 @@ IF(NOT HAVE_GETOPT_H)
 ENDIF()
 
 set(CONSIO_SOURCES
+  include/consio_config.h
   include/consio.h
   include/consio_input.h
   include/consio_output.h
@@ -41,17 +53,10 @@ set(CONSIO_SOURCES
 set(CONSIO_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # main target config
-add_library(consio SHARED ${CONSIO_SOURCES})
+add_library(consio ${BUILD_TYPE} ${CONSIO_SOURCES})
 target_include_directories(consio PUBLIC ${CONSIO_INCLUDE_DIR})
 set_property(TARGET consio PROPERTY C_STANDARD 11)
 set_property(TARGET consio PROPERTY C_STANDARD_REQUIRED ON)
-
-# platform-specific flags
-IF(WIN32)
-  set_property(TARGET consio PROPERTY COMPILE_DEFINITIONS WINDOWS)
-ELSEIF(UNIX)
-  set_property(TARGET consio PROPERTY COMPILE_DEFINITIONS UNIX)
-ENDIF()
 
 # compiler-specific flags
 IF(CMAKE_C_COMPILER_ID MATCHES "GNU")
