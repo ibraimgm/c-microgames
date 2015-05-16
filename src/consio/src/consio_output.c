@@ -25,6 +25,7 @@
 #include <windows.h>
 #endif
 
+#include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
 
@@ -217,10 +218,33 @@ void set_cursor_visibility(bool visible)
   SetConsoleCursorInfo(get_console_handle(), &cursor);
 }
 #else
-void resetSGR();
-void setSGR(int foreground, int background);
+void resetSGR()
+{
+  printf("\x1b[0m");
+}
 
-void clearscreen();
-void gotoxy(unsigned int x, unsigned int y);
-void set_cursor_visibility(bool visible);
+void setSGR(int foreground, int background)
+{
+  if (foreground != COLOR_UNCHANGED)
+    printf("\x1b[%dm", foreground + LAYER_FOREGROUND);
+
+  if (background != COLOR_UNCHANGED)
+    printf("\x1b[%dm", background + LAYER_BACKGROUND);
+}
+
+void clearscreen()
+{
+  printf("\x1b[2J");
+  gotoxy(0, 0);
+}
+
+void gotoxy(unsigned int x, unsigned int y)
+{
+  printf("\x1b[%d;%dH", y, x);
+}
+
+void set_cursor_visibility(bool visible)
+{
+  printf("\x1b[?25%c", visible ? 'h' : 'l');
+}
 #endif

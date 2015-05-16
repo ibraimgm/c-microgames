@@ -19,11 +19,14 @@
  * along with C Microgames.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "consio_input.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "consio_input.h"
 
+#ifdef HAVE_TERMIOS_H
+#include <termios.h>
+#endif
 
 void handle_getopt_err(int opt_status, int opt_value)
 {
@@ -48,7 +51,6 @@ void raise_getopt_err(char *message)
   exit(1);
 }
 
-
 #if defined(HAVE_CONIO_H) && !defined(HAVE_GETCH)
 int getch()
 {
@@ -59,8 +61,43 @@ int getche()
 {
   return _getche();
 }
-#elsif !defined(HAVE_CONIO_H)
-#error getch() / getche() not implemented
+#elif !defined(HAVE_CONIO_H) && defined(HAVE_TERMIOS_H)
+static struct termios old, new;
+
+void initTermios(int echo)
+{
+  tcgetattr(0, &old);
+  new = old;
+  new.c_lflag &= ~ICANON; // disable io buffer
+  new.c_lflag &= echo ? ECHO : ~ECHO; // enable/disable echo mode
+  tcsetattr(0, TCSANOW, &new);
+}
+
+void resetTermios(void)
+{
+  tcsetattr(0, TCSANOW, &old);
+}
+
+char getch_(int echo)
+{
+  char ch;
+  initTermios(echo);
+  ch = getchar();
+  resetTermios();
+  return ch;
+}
+
+int getch()
+{
+  return getch_(0);
+}
+
+int getche()
+{
+  return getch_(1);
+}
+#else
+#error getch / getche not implemented
 #endif
 
 int getch_restrict_e(const char *valid_chars, bool echo)

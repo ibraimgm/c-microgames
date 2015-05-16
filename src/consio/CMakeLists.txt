@@ -18,6 +18,7 @@ set(PROJECT_COPYRIGHT_AUTHOR "Rafael Ibraim")
 check_include_file(getopt.h HAVE_GETOPT_H)
 check_include_file(conio.h HAVE_CONIO_H)
 check_symbol_exists(getch conio.h HAVE_GETCH)
+check_include_file(termios.h HAVE_TERMIOS_H)
 check_symbol_exists(GetStdHandle windows.h USE_WINDOWS_CONSOLE_API)
 
 configure_file (

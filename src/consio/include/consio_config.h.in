@@ -30,6 +30,7 @@
 #cmakedefine HAVE_GETOPT_H
 #cmakedefine HAVE_CONIO_H
 #cmakedefine HAVE_GETCH
+#cmakedefine HAVE_TERMIOS_H
 #cmakedefine USE_WINDOWS_CONSOLE_API
 
 #endif /* CONSIO_CONFIG_H */
