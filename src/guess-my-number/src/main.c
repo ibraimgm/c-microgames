@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <time.h>
 #include "config.h"
 #include "consio.h"
 
@@ -33,6 +34,21 @@ static struct option long_options[] =
   {"help", no_argument, NULL, 'h'},
   {"max", required_argument, NULL, 'm'},
   {0, 0, 0, 0}
+};
+
+#define GUESS_MESSAGES_SIZE 9
+
+static char *guess_messages[GUESS_MESSAGES_SIZE] =
+{
+  "Did you choose %d?",
+  "The number is %d, right?",
+  "I'm thinking about the number %d. Is that the one?",
+  "If I have to guess, I'd say the number is %d.",
+  "Accordind to the latest news, the number should be %d.",
+  "Weather report: the numberis %d.",
+  "%d is the chosen one.",
+  "%d! I choose you!",
+  "My spider sense say the number is %d.",
 };
 
 int main(int argc, char **argv)
@@ -84,15 +100,17 @@ int main(int argc, char **argv)
   int min = 0;
   int guess; char answer;
 
+  srandom(time(0));
   atexit(resetSGR);
 
   do
   {
     guess = min + (max - min) / 2;
 
-    printf("Did you choose ");
-    setFG(VIVID_WHITE);  printf("%d", guess);
-    resetSGR();          printf("? (");
+    int msg = random() % GUESS_MESSAGES_SIZE;
+    printf(guess_messages[msg], guess);
+
+    resetSGR();          printf(" (");
     setFG(VIVID_RED);    printf(">");
     resetSGR();          printf(", ");
     setFG(VIVID_YELLOW); printf("<");
