@@ -25,5 +25,6 @@ configure_file (
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
 # add every subproject
+add_subdirectory(src/containers)
 add_subdirectory(src/consio)
 add_subdirectory(src/guess-my-number)
