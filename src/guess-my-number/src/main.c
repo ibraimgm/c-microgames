@@ -100,14 +100,14 @@ int main(int argc, char **argv)
   int min = 0;
   int guess; char answer;
 
-  srandom(time(0));
+  srand(time(0));
   atexit(resetSGR);
 
   do
   {
     guess = min + (max - min) / 2;
 
-    int msg = random() % GUESS_MESSAGES_SIZE;
+    int msg = rand() % GUESS_MESSAGES_SIZE;
     printf(guess_messages[msg], guess);
 
     resetSGR();          printf(" (");
