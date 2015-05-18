@@ -51,7 +51,9 @@ void raise_getopt_err(char *message)
   exit(1);
 }
 
-#if defined(HAVE_CONIO_H) && !defined(HAVE_GETCH)
+#if defined(HAVE_GETCH)
+// do nothing; function already available
+#elif defined(HAVE_CONIO_H) && !defined(HAVE_GETCH)
 int getch()
 {
   return _getch();
