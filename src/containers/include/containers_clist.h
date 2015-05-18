@@ -28,7 +28,7 @@ CList *clist_new();
 void clist_destroy(CList *list, void *(*free_fn)(void *));
 
 void clist_push(CList *list, void *value);
-void clist_add(CList *list, void *value);
+void clist_append(CList *list, void *value);
 void *clist_peek(CList *list);
 void *clist_peek_last(CList *list);
 void *clist_nth(CList *list, unsigned int index);

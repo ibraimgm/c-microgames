@@ -80,7 +80,7 @@ void clist_push(CList *list, void *value)
   }
 }
 
-void clist_add(CList *list, void *value)
+void clist_append(CList *list, void *value)
 {
   CListNode *node = malloc(sizeof(CListNode));
   node->value = value;
