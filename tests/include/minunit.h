@@ -1,4 +1,10 @@
 /*
+ * Changed by Rafael Ibraim, to support building on VS2013 Community
+ *
+ * The code and comments remain identical to the original version, except
+ * when noted otherwise.
+ */
+/*
  * Copyright (c) 2012 David SiÃ±uela Pastor, siu.4coders@gmail.com
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -55,6 +61,43 @@
 
 #include <stdio.h>
 #include <math.h>
+
+/*
+ * Rafael Ibraim - At least until VS2013, Microsoft did NOT implement
+ * the function `snprintf` from the standard. The solution was to do
+ * a quick and dirt implementation here.
+ *
+ * Also, MSVC uses `__FUNCTION__` instead of `__func__`, so I created
+ * the needed alias
+ */
+#if defined(_MSC_VER) && (_MSC_VER < 1900)
+#define __func__ __FUNCTION__
+
+#define snprintf c99_snprintf
+int c99_vsnprintf(char* str, size_t size, const char* format, va_list ap)
+{
+    int count = -1;
+
+    if (size != 0)
+        count = _vsnprintf_s(str, size, _TRUNCATE, format, ap);
+    if (count == -1)
+        count = _vscprintf(format, ap);
+
+    return count;
+}
+
+int c99_snprintf(char* str, size_t size, const char* format, ...)
+{
+    int count;
+    va_list ap;
+
+    va_start(ap, format);
+    count = c99_vsnprintf(str, size, format, ap);
+    va_end(ap);
+
+    return count;
+}
+#endif
 
 /*  Maximum length of last message */
 #define MINUNIT_MESSAGE_LEN 1024
@@ -210,7 +253,8 @@ static double mu_timer_real( )
 	ULONGLONG t;
 #if defined(NTDDI_WIN8) && NTDDI_VERSION >= NTDDI_WIN8
 	/* Windows 8, Windows Server 2012 and later. ---------------- */
-	GetSystemTimePreciseAsFileTime( &tm );
+	//GetSystemTimePreciseAsFileTime( &tm ); //Rafael Ibraim - BUG - VS2013 community incorrectly sets this up on Win7
+        GetSystemTimeAsFileTime( &tm );
 #else
 	/* Windows 2000 and later. ---------------------------------- */
 	GetSystemTimeAsFileTime( &tm );
