@@ -119,7 +119,10 @@ void *clist_nth(CList *list, unsigned int index)
   CListNode *node = list->first;
 
   while ((node) && (index > 0))
+  {
     node = node->next;
+    --index;
+  }
 
   if ((node) && (index == 0))
     return node->value;
