@@ -28,3 +28,12 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 add_subdirectory(src/containers)
 add_subdirectory(src/consio)
 add_subdirectory(src/guess-my-number)
+
+# unit tests
+enable_testing()
+add_subdirectory(tests)
+add_test(runAllTests testrunner)
+add_custom_target(check
+  COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+  DEPENDS testrunner
+  )
