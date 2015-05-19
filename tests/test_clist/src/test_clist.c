@@ -138,9 +138,9 @@ MU_TEST_SUITE(test_suite_clist)
   clist_destroy(list, NULL);
 }
 
-int runTestSuiteCList()
+int main(int argc, char **argv)
 {
   MU_RUN_SUITE(test_suite_clist);
 
-  return minunit_status;
+  return minunit_fail > 0 ? 1 : 0;
 }

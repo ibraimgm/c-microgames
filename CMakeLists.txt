@@ -31,9 +31,9 @@ add_subdirectory(src/guess-my-number)
 
 # unit tests
 enable_testing()
-add_subdirectory(tests)
-add_test(runAllTests testrunner)
+add_subdirectory(tests/test_clist)
+add_test(Test_CList test_clist)
 add_custom_target(check
   COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-  DEPENDS testrunner
+  DEPENDS test_clist
   )
