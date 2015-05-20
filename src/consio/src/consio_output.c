@@ -20,6 +20,7 @@
  */
 
 #include "consio_output.h"
+#include "containers.h"
 
 #ifdef USE_WINDOWS_CONSOLE_API
 #include <windows.h>
@@ -65,10 +66,21 @@ const int VIVID_MAGENTA = INTENSITY_VIVID + COLOR_MAGENTA;
 const int VIVID_CYAN    = INTENSITY_VIVID + COLOR_CYAN;
 const int VIVID_WHITE   = INTENSITY_VIVID + COLOR_WHITE;
 
+// extra members needed for use with printc, etc.
+static int DEFAULT_FOREGROUND = INTENSITY_DULL + COLOR_WHITE;
+static int DEFAULT_BACKGROUND = INTENSITY_DULL + COLOR_BLACK;
+static int CURRENT_FOREGROUND = INTENSITY_DULL + COLOR_WHITE;
+static int CURRENT_BACKGROUND = INTENSITY_DULL + COLOR_BLACK;
+
+typedef struct ColorPair
+{
+  int fg;
+  int bg;
+} ColorPair;
+
+// definitios to use with the win32 console API
 #ifdef USE_WINDOWS_CONSOLE_API
 static HANDLE hconsole = 0;
-static WORD last_bg;
-static WORD last_fg;
 static WORD saved_attributes;
 
 // make sure we have a valid handle
@@ -81,18 +93,6 @@ static HANDLE get_console_handle()
     hconsole = GetStdHandle(STD_OUTPUT_HANDLE);
     GetConsoleScreenBufferInfo(hconsole, &info);
     saved_attributes = info.wAttributes;
-
-    last_bg = 0;
-    last_bg |= (saved_attributes & BACKGROUND_RED)       ? BACKGROUND_RED       : 0;
-    last_bg |= (saved_attributes & BACKGROUND_GREEN)     ? BACKGROUND_GREEN     : 0;
-    last_bg |= (saved_attributes & BACKGROUND_BLUE)      ? BACKGROUND_BLUE      : 0;
-    last_bg |= (saved_attributes & BACKGROUND_INTENSITY) ? BACKGROUND_INTENSITY : 0;
-
-    last_fg = 0;
-    last_fg |= (saved_attributes & FOREGROUND_RED)       ? FOREGROUND_RED       : 0;
-    last_fg |= (saved_attributes & FOREGROUND_GREEN)     ? FOREGROUND_GREEN     : 0;
-    last_fg |= (saved_attributes & FOREGROUND_BLUE)      ? FOREGROUND_BLUE      : 0;
-    last_fg |= (saved_attributes & FOREGROUND_INTENSITY) ? FOREGROUND_INTENSITY : 0;
   }
 
   return hconsole;
@@ -172,33 +172,70 @@ static WORD ansi_to_wincolor(int color)
 
   return attr;
 }
+#endif
+
+void set_default_colors(int foreground, int background)
+{
+  if (foreground != COLOR_UNCHANGED)
+    DEFAULT_FOREGROUND = foreground;
+
+  if (background != COLOR_UNCHANGED)
+    DEFAULT_BACKGROUND = background;
+
+  setSGR(DEFAULT_FOREGROUND, DEFAULT_BACKGROUND);
+}
 
 void resetSGR()
 {
+#ifdef USE_WINDOWS_CONSOLE_API
   SetConsoleTextAttribute(get_console_handle(), saved_attributes);
+#else
+  printf("\x1b[0m");
+#endif
+
+  CURRENT_FOREGROUND = DEFAULT_FOREGROUND;
+  CURRENT_BACKGROUND = DEFAULT_BACKGROUND;
 }
 
 void setSGR(int foreground, int background)
 {
-  WORD fg = foreground == COLOR_UNCHANGED ? last_fg : ansi_to_wincolor(foreground + LAYER_FOREGROUND);
-  WORD bg = background == COLOR_UNCHANGED ? last_bg : ansi_to_wincolor(background + LAYER_BACKGROUND);
+#ifdef USE_WINDOWS_CONSOLE_API
+  WORD fg = foreground == COLOR_UNCHANGED
+    ? ansi_to_wincolor(CURRENT_FOREGROUND + LAYER_FOREGROUND)
+    : ansi_to_wincolor(foreground + LAYER_FOREGROUND);
+  WORD bg = background == COLOR_UNCHANGED
+    ? ansi_to_wincolor(CURRENT_BACKGROUND + LAYER_BACKGROUND)
+    : ansi_to_wincolor(background + LAYER_BACKGROUND);
 
   SetConsoleTextAttribute(get_console_handle(), fg | bg);
-  last_fg = fg;
-  last_bg = bg;
+#else
+  if (foreground != COLOR_UNCHANGED)
+    printf("\x1b[%dm", foreground + LAYER_FOREGROUND);
+
+  if (background != COLOR_UNCHANGED)
+    printf("\x1b[%dm", background + LAYER_BACKGROUND);
+#endif
+
+  CURRENT_FOREGROUND = foreground != COLOR_UNCHANGED ? foreground : CURRENT_FOREGROUND;
+  CURRENT_BACKGROUND = background != COLOR_UNCHANGED ? background : CURRENT_BACKGROUND;
 }
 
 void gotoxy(unsigned int x, unsigned int y)
 {
+#ifdef USE_WINDOWS_CONSOLE_API
   COORD c;
   c.X = x;
   c.Y = y;
 
   SetConsoleCursorPosition(get_console_handle(), c);
+#else
+  printf("\x1b[%d;%dH", y, x);
+#endif
 }
 
 void clearscreen()
 {
+#ifdef USE_WINDOWS_CONSOLE_API
   HANDLE h = get_console_handle();
   CONSOLE_SCREEN_BUFFER_INFO info;
   COORD start = {0, 0};
@@ -207,44 +244,171 @@ void clearscreen()
   GetConsoleScreenBufferInfo(h, &info);
   FillConsoleOutputCharacter(h, ' ', info.dwSize.X * info.dwSize.Y, start, &chars_written);
   SetConsoleCursorPosition(h, start);
+#else
+  printf("\x1b[2J");
+  gotoxy(0, 0);
+#endif
 }
 
 void set_cursor_visibility(bool visible)
 {
+#ifdef USE_WINDOWS_CONSOLE_API
   CONSOLE_CURSOR_INFO cursor;
 
   cursor.dwSize = 1;
   cursor.bVisible = visible;
   SetConsoleCursorInfo(get_console_handle(), &cursor);
-}
 #else
-void resetSGR()
-{
-  printf("\x1b[0m");
-}
-
-void setSGR(int foreground, int background)
-{
-  if (foreground != COLOR_UNCHANGED)
-    printf("\x1b[%dm", foreground + LAYER_FOREGROUND);
-
-  if (background != COLOR_UNCHANGED)
-    printf("\x1b[%dm", background + LAYER_BACKGROUND);
-}
-
-void clearscreen()
-{
-  printf("\x1b[2J");
-  gotoxy(0, 0);
-}
-
-void gotoxy(unsigned int x, unsigned int y)
-{
-  printf("\x1b[%d;%dH", y, x);
-}
-
-void set_cursor_visibility(bool visible)
-{
   printf("\x1b[?25%c", visible ? 'h' : 'l');
-}
 #endif
+}
+
+static int char_to_color(char c)
+{
+  switch (c)
+  {
+    case 'r': return DULL_RED;
+    case 'g': return DULL_GREEN;
+    case 'b': return DULL_BLUE;
+    case 'c': return DULL_CYAN;
+    case 'm': return DULL_MAGENTA;
+    case 'y': return DULL_YELLOW;
+    case 'k': return DULL_BLACK;
+    case 'w': return DULL_WHITE;
+    case 'R': return VIVID_RED;
+    case 'G': return VIVID_GREEN;
+    case 'B': return VIVID_BLUE;
+    case 'C': return VIVID_CYAN;
+    case 'M': return VIVID_MAGENTA;
+    case 'Y': return VIVID_YELLOW;
+    case 'K': return VIVID_BLACK;
+    case 'W': return VIVID_WHITE;
+    case '_': return COLOR_UNCHANGED;
+    default: return 0;
+  }
+}
+
+void printc(const char *format, ...)
+{
+  // start argument parsing
+  va_list args;
+  va_start(args, format);
+
+  // get the needed buffer size
+  int bsize = vsnprintf(NULL, 0, format, args);
+  char buffer[bsize + 1];
+
+  // get teh data and finalize the arguments
+  vsnprintf(buffer, bsize + 1, format, args);
+  va_end(args);
+
+  // the stack of colors to use
+  CList *color_stack = clist_new();
+
+  // parsing
+  for (int i = 0; buffer[i] != '\0'; ++i)
+  {
+    char c0 = buffer[i];
+
+    // we found 'begin' token!
+    if (c0 == '$')
+    {
+      char c1 = buffer[i + 1];
+
+      if (c1 == '\0') goto no_token;
+
+      // if the next character is a '$' or '}', it's just a escape sequence
+      if ((c1 == '$') || (c1 == '}'))
+      {
+        printf("%c", c1);
+        ++i;
+        continue;
+      }
+
+      // store the colors and the characters to be consumed
+      int fg = char_to_color(c1);
+      int bg = 0;
+      int chars_to_skip = 0;
+
+      // is this character a color?
+      if (fg)
+      {
+        // let's see if the next character is also a color
+        if (buffer[i + 2] == '\0') goto no_token;
+
+        char ch2 = buffer[i + 2];
+        bg = char_to_color(ch2);
+
+        //if we found a color, we need to check the next character for '{'
+        if (bg)
+        {
+          if (buffer[i + 3] == '\0') goto no_token;
+
+          char ch3 = buffer[i + 3];
+          chars_to_skip = ch3 == '{' ? 3 : 0;
+        }
+        // instead of a color, we found a '{'
+        else if (ch2 == '{')
+        {
+          bg = COLOR_UNCHANGED;
+          chars_to_skip = 2;
+        }
+        //not a color and not a '{'.
+      }
+      // not a fg color!
+
+      // now, if we came this far, we need to consume the characters and
+      // apply the colors. We do this maintaining a stack of the colors used
+      if (chars_to_skip)
+      {
+        fg = fg == COLOR_UNCHANGED ? CURRENT_FOREGROUND : fg;
+        bg = bg == COLOR_UNCHANGED ? CURRENT_BACKGROUND : bg;
+
+        ColorPair *p = malloc(sizeof(ColorPair));
+        p->fg = CURRENT_FOREGROUND;
+        p->bg = CURRENT_BACKGROUND;
+        clist_push(color_stack, p);
+
+        setSGR(fg, bg);
+
+        while ((chars_to_skip > 0) && (buffer[i] != '\0'))
+        {
+          ++i;
+          --chars_to_skip;
+        }
+
+        continue;
+      }
+    }
+
+    // we got an 'end' token, and we have colors to pop
+    if ((c0 == '}') && clist_peek(color_stack))
+    {
+      ColorPair *p = clist_pop(color_stack);
+      setSGR(p->fg, p->bg);
+
+      free(p);
+      continue;
+    }
+
+  no_token:
+    // no token here...
+    printf("%c", c0);
+  } // for
+
+  //now, the user may have forgot to close one or more of the control sequences.
+  //in this case, we simply pop them all and apply the last one
+  int fg = COLOR_UNCHANGED, bg = COLOR_UNCHANGED;
+
+  while (clist_peek(color_stack))
+  {
+    ColorPair *p = clist_pop(color_stack);
+    fg = p->fg;
+    bg = p->bg;
+
+    free(p);
+  }
+
+  setSGR(fg, bg);
+  free(color_stack);
+}

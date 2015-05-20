@@ -45,6 +45,8 @@ extern const int VIVID_MAGENTA;
 extern const int VIVID_CYAN;
 extern const int VIVID_WHITE;
 
+void set_default_colors(int foreground, int background);
+
 void resetSGR();
 void setSGR(int foreground, int background);
 #define setFG(foreground) setSGR(foreground, COLOR_UNCHANGED);
@@ -56,5 +58,7 @@ void gotoxy(unsigned int x, unsigned int y);
 void set_cursor_visibility(bool visible);
 #define hidecursor() set_cursor_visibility(false);
 #define showcursor() set_cursor_visibility(true);
+
+void printc(const char *format, ...);
 
 #endif /* CONSIO_OUTPUT_H */

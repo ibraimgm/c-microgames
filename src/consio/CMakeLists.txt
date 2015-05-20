@@ -52,10 +52,12 @@ set(CONSIO_SOURCES
   )
 
 set(CONSIO_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(CONSIO_LIBS containers)
 
 # main target config
 add_library(consio ${BUILD_TYPE} ${CONSIO_SOURCES})
 target_include_directories(consio PUBLIC ${CONSIO_INCLUDE_DIR})
+target_link_libraries(consio ${CONSIO_LIBS})
 set_property(TARGET consio PROPERTY C_STANDARD 11)
 set_property(TARGET consio PROPERTY C_STANDARD_REQUIRED ON)
 

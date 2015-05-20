@@ -40,15 +40,15 @@ static struct option long_options[] =
 
 static char *guess_messages[GUESS_MESSAGES_SIZE] =
 {
-  "Did you choose %d?",
-  "The number is %d, right?",
-  "I'm thinking about the number %d. Is that the one?",
-  "If I have to guess, I'd say the number is %d.",
-  "Accordind to the latest news, the number should be %d.",
-  "Weather report: the numberis %d.",
-  "%d is the chosen one.",
-  "%d! I choose you!",
-  "My spider sense say the number is %d.",
+  "Did you choose $W{%d}? %s ",
+  "The number is $W{%d}, right? %s ",
+  "I'm thinking about the number $W{%d}. Is that the one? %s ",
+  "If I have to guess, I'd say the number is $W{%d}. %s ",
+  "Accordind to the latest news, the number should be $W{%d}. %s ",
+  "Weather report: the numberis $W{%d}. %s ",
+  "$W{%d} is the chosen one. %s ",
+  "$W{%d}! I choose you! %s ",
+  "My spider sense say the number is $W{%d}. %s ",
 };
 
 int main(int argc, char **argv)
@@ -108,15 +108,7 @@ int main(int argc, char **argv)
     guess = min + (max - min) / 2;
 
     int msg = rand() % GUESS_MESSAGES_SIZE;
-    printf(guess_messages[msg], guess);
-
-    resetSGR();          printf(" (");
-    setFG(VIVID_RED);    printf(">");
-    resetSGR();          printf(", ");
-    setFG(VIVID_YELLOW); printf("<");
-    resetSGR();          printf(", ");
-    setFG(VIVID_CYAN);   printf("=");
-    resetSGR();          printf(") ");
+    printc(guess_messages[msg], guess, "($R{>}, $Y{<}, $C{=})");
     fflush(stdout);
 
     setFG(VIVID_MAGENTA);
@@ -131,15 +123,9 @@ int main(int argc, char **argv)
   } while ((answer != '=') && (max >= min));
 
   if (answer == '=')
-  {
-    setFG(VIVID_GREEN);
-    printf("Yep, I guessed the number: %d!\n", guess);
-  }
+    printc("$G{Yep, I guessed the number: %d!}\n", guess);
   else if (max < min)
-  {
-    setFG(VIVID_RED);
-    printf("Hey! You cheated!\n");
-  }
+    printc("$R{Hey! You cheated!}\n");
 
   return 0;
 }
