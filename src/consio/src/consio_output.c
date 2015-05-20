@@ -296,7 +296,11 @@ void printc(const char *format, ...)
 
   // get the needed buffer size
   int bsize = vsnprintf(NULL, 0, format, args);
+#ifdef _MSC_VER
+  char *buffer = malloc(sizeof(char) * (bsize + 1)); // C2466
+#else
   char buffer[bsize + 1];
+#endif
 
   // get teh data and finalize the arguments
   vsnprintf(buffer, bsize + 1, format, args);
@@ -411,4 +415,7 @@ void printc(const char *format, ...)
 
   setSGR(fg, bg);
   free(color_stack);
+#ifdef _MSC_VER
+  free(buffer);
+#endif
 }
