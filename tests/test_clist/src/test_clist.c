@@ -24,13 +24,6 @@
 
 static CList *list = NULL;
 
-static void *iptr(int i)
-{
-  int *p = malloc(sizeof(int));
-  *p = i;
-  return p;
-}
-
 MU_TEST(test_clist_new)
 {
   list = clist_new();

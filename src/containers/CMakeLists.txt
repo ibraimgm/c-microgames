@@ -30,7 +30,9 @@ set(CONTAINERS_SOURCES
   include/containers_config.h
   include/containers.h
   include/containers_clist.h
+  include/containers_primptr.h
   src/containers_clist.c
+  src/containers_primptr.c
   )
 
 set(CONTAINERS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)

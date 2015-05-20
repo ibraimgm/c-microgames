@@ -1,6 +1,6 @@
 //  -*- coding:utf-8-unix; -*-
 /*
- * containers.h
+ * containers_primptr.c
  * Copyright 2015 Rafael Ibraim <ibraim.gm@gmail.com>
  *
  * This file is part of C Microgames.
@@ -19,11 +19,18 @@
  * along with C Microgames.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CONTAINERS_H
-#define CONTAINERS_H
-
-#include "containers_config.h"
-#include "containers_clist.h"
 #include "containers_primptr.h"
+#include <stdlib.h>
 
-#endif /* CONTAINERS_H */
+#define PRIMPTR_TEMPLATE(type, name) type *name(type value) {\
+  type *p = malloc(sizeof(type));\
+  *p = value;\
+  return p;\
+  }
+
+PRIMPTR_TEMPLATE(int, iptr)
+PRIMPTR_TEMPLATE(unsigned int, uiptr)
+PRIMPTR_TEMPLATE(long, lptr)
+PRIMPTR_TEMPLATE(unsigned long, ulptr)
+PRIMPTR_TEMPLATE(char, cptr)
+PRIMPTR_TEMPLATE(double, dptr)

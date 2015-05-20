@@ -1,6 +1,6 @@
 //  -*- coding:utf-8-unix; -*-
 /*
- * containers.h
+ * containers_primptr.h
  * Copyright 2015 Rafael Ibraim <ibraim.gm@gmail.com>
  *
  * This file is part of C Microgames.
@@ -19,11 +19,14 @@
  * along with C Microgames.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CONTAINERS_H
-#define CONTAINERS_H
+#ifndef CONTAINERS_PRIMPTR_H
+#define CONTAINERS_PRIMPTR_H
 
-#include "containers_config.h"
-#include "containers_clist.h"
-#include "containers_primptr.h"
+int *iptr(int value);
+unsigned int *uiptr(unsigned int value);
+long *lptr(long value);
+unsigned long *ulptr(unsigned long value);
+char *cptr(char value);
+double *dptr(double value);
 
-#endif /* CONTAINERS_H */
+#endif /* CONTAINERS_PRIMPTR_H */
