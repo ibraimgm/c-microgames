@@ -30,8 +30,10 @@ set(CONTAINERS_SOURCES
   include/containers_config.h
   include/containers.h
   include/containers_clist.h
+  include/containers_variant.h
   include/containers_primptr.h
   src/containers_clist.c
+  src/containers_variant.c
   src/containers_primptr.c
   )
 

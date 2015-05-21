@@ -25,5 +25,6 @@
 #include "containers_config.h"
 #include "containers_clist.h"
 #include "containers_primptr.h"
+#include "containers_variant.h"
 
 #endif /* CONTAINERS_H */
