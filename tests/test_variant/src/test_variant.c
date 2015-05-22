@@ -53,10 +53,10 @@ MU_TEST(test_variant_conversions)
   varsetptr(v, &i);
   mu_check(varisptr(v));
   mu_check(vartoptr(v) != NULL);
-  mu_check(*((int*)vartoptr(v)) == 10);
+  mu_check(ptri(vartoptr(v)) == 10);
 
   i = 20;
-  mu_check(*((int*)vartoptr(v)) == 20);
+  mu_check(ptri(vartoptr(v)) == 20);
 
   varClear(v);
   mu_check(!varassigned(v));

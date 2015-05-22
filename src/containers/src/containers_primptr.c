@@ -34,3 +34,5 @@ PRIMPTR_TEMPLATE(long, lptr)
 PRIMPTR_TEMPLATE(unsigned long, ulptr)
 PRIMPTR_TEMPLATE(char, cptr)
 PRIMPTR_TEMPLATE(double, dptr)
+
+#undef PRIMPTR_TEMPLATE

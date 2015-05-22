@@ -29,4 +29,12 @@ unsigned long *ulptr(unsigned long value);
 char *cptr(char value);
 double *dptr(double value);
 
+#define ptri(x) *((int*)(x))
+#define ptrui(x) *((unsigned int*)(x))
+#define ptrl(x) *((long*)(x))
+#define ptrul(x) *((unsigned long*)(x))
+#define ptrc(x) *((char*)(x))
+#define ptrd(x) *((double*)(x))
+
+
 #endif /* CONTAINERS_PRIMPTR_H */

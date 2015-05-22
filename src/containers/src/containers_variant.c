@@ -29,6 +29,7 @@ typedef struct Variant
 
   union
   {
+    char charval;
     int intval;
     unsigned int uintval;
     long longval;
@@ -61,6 +62,7 @@ typedef struct Variant
   return value->type == vtype;\
   }
 
+GEN_VAL_TO_VAR(char, char, varChar)
 GEN_VAL_TO_VAR(int, int, varInt)
 GEN_VAL_TO_VAR(unsigned int, uint, varUInt)
 GEN_VAL_TO_VAR(long, long, varLong)
@@ -68,6 +70,7 @@ GEN_VAL_TO_VAR(unsigned long, ulong, varULong)
 GEN_VAL_TO_VAR(double, double, varDouble)
 GEN_VAL_TO_VAR(void *,ptr, varPtr)
 
+GEN_VAR_TO_VAL_DEF(char, char, varChar)
 GEN_VAR_TO_VAL_DEF(int, int, varInt)
 GEN_VAR_TO_VAL_DEF(unsigned int, uint, varUInt)
 GEN_VAR_TO_VAL_DEF(long, long, varLong)
@@ -75,6 +78,7 @@ GEN_VAR_TO_VAL_DEF(unsigned long, ulong, varULong)
 GEN_VAR_TO_VAL_DEF(double, double, varDouble)
 GEN_VAR_TO_VAL_DEF(void *,ptr, varPtr)
 
+GEN_VAR_SET(char, char, varChar)
 GEN_VAR_SET(int, int, varInt)
 GEN_VAR_SET(unsigned int, uint, varUInt)
 GEN_VAR_SET(long, long, varLong)
@@ -82,6 +86,7 @@ GEN_VAR_SET(unsigned long, ulong, varULong)
 GEN_VAR_SET(double, double, varDouble)
 GEN_VAR_SET(void *,ptr, varPtr)
 
+GEN_VAR_IS(char, varChar)
 GEN_VAR_IS(int, varInt)
 GEN_VAR_IS(uint,varUInt)
 GEN_VAR_IS(long, varLong)
@@ -111,3 +116,8 @@ bool varassigned(Variant *value)
 {
   return value->type != varUnassigned;
 }
+
+#undef GEN_VAL_TO_VAR
+#undef GEN_VAR_TO_VAL_DEF
+#undef GEN_VAR_SET
+#undef GEN_VAR_IS

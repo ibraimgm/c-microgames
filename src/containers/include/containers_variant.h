@@ -27,6 +27,7 @@
 typedef enum VariantType
 {
   varUnassigned,
+  varChar,
   varInt,
   varUInt,
   varLong,
@@ -42,6 +43,7 @@ typedef struct Variant Variant;
 #define GEN_VAR_SET(type, name) void varset##name(Variant *var, type value);
 #define GEN_VAR_IS(name) bool varis##name(Variant *value);
 
+GEN_VAL_TO_VAR(char, char)
 GEN_VAL_TO_VAR(int, int)
 GEN_VAL_TO_VAR(unsigned int, uint)
 GEN_VAL_TO_VAR(long, long)
@@ -49,6 +51,7 @@ GEN_VAL_TO_VAR(unsigned long, ulong)
 GEN_VAL_TO_VAR(double, double)
 GEN_VAL_TO_VAR(void *,ptr)
 
+GEN_VAR_TO_VAL_DEF(char, char)
 GEN_VAR_TO_VAL_DEF(int, int)
 GEN_VAR_TO_VAL_DEF(unsigned int, uint)
 GEN_VAR_TO_VAL_DEF(long, long)
@@ -56,6 +59,7 @@ GEN_VAR_TO_VAL_DEF(unsigned long, ulong)
 GEN_VAR_TO_VAL_DEF(double, double)
 GEN_VAR_TO_VAL_DEF(void *,ptr)
 
+GEN_VAR_SET(char, char)
 GEN_VAR_SET(int, int)
 GEN_VAR_SET(unsigned int, uint)
 GEN_VAR_SET(long, long)
@@ -63,6 +67,7 @@ GEN_VAR_SET(unsigned long, ulong)
 GEN_VAR_SET(double, double)
 GEN_VAR_SET(void *,ptr)
 
+GEN_VAR_IS(char)
 GEN_VAR_IS(int)
 GEN_VAR_IS(uint)
 GEN_VAR_IS(long)
