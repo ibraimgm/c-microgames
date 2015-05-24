@@ -24,7 +24,7 @@ compiler:
   - gcc
   - clang
 
-sudo:required
+sudo: required
 
 before_install:
   - sudo apt-get update -qq
