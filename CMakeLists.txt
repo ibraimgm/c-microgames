@@ -1,20 +1,10 @@
 # -*- coding:utf-8-unix; -*-
 
-cmake_minimum_required(VERSION 2.8)
-
-# set version manually
-if(POLICY CMP0048)
-  cmake_policy(SET CMP0048 OLD)
-endif()
-
+cmake_minimum_required(VERSION 3.0)
 project(C_Microgames
   LANGUAGES C
+  VERSION 0.1.0
   )
-
-set(PROJECT_VERSION_MAJOR 0)
-set(PROJECT_VERSION_MINOR 1)
-set(PROJECT_VERSION_PATCH 0)
-set(PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
 # make sure we support in-source and out-source builds
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
