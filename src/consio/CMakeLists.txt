@@ -10,9 +10,7 @@ if(POLICY CMP0048)
 endif()
 
 # project information
-project(ConsIO
-  LANGUAGES C
-  )
+project(ConsIO C)
 
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 1)

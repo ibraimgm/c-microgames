@@ -7,9 +7,7 @@ if(POLICY CMP0048)
 endif()
 
 # project information
-project(test_clist
-  LANGUAGES C
-  )
+project(test_clist C)
 
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 1)

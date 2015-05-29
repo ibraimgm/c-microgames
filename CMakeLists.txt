@@ -7,9 +7,7 @@ if(POLICY CMP0048)
   cmake_policy(SET CMP0048 OLD)
 endif()
 
-project(C_Microgames
-  LANGUAGES C
-  )
+project(C_Microgames C)
 
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 1)
