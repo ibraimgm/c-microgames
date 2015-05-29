@@ -8,7 +8,9 @@ if(POLICY CMP0048)
 endif()
 
 # project information
-project(Containers C)
+project(Containers
+  LANGUAGES C
+  )
 
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 1)

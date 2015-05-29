@@ -8,7 +8,9 @@ if(POLICY CMP0048)
 endif()
 
 # project information
-project(GuessMyNumber_Microgame C)
+project(GuessMyNumber_Microgame
+  LANGUAGES C
+  )
 
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 1)
