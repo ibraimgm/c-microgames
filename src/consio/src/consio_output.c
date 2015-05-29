@@ -29,7 +29,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
-#include <stdarg.h>
 
 // Values and offsets according to ANSI
 #define LAYER_FOREGROUND 30
