@@ -31,9 +31,11 @@ set(CONTAINERS_SOURCES
   include/containers.h
   include/containers_clist.h
   include/containers_variant.h
+  include/containers_darray.h
   include/containers_primptr.h
   src/containers_clist.c
   src/containers_variant.c
+  src/containers_darray.c
   src/containers_primptr.c
   )
 

@@ -33,9 +33,11 @@ add_subdirectory(src/guess-my-number)
 enable_testing()
 add_subdirectory(tests/test_clist)
 add_subdirectory(tests/test_variant)
+add_subdirectory(tests/test_darray)
 add_test(Test_CList test_clist)
 add_test(Test_Variant test_variant)
+add_test(Test_DArray test_darray)
 add_custom_target(check
   COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-  DEPENDS test_clist test_variant
+  DEPENDS test_clist test_variant test_darray
   )
