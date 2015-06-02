@@ -28,5 +28,5 @@ set_property(TARGET test_variant PROPERTY EXCLUDE_FROM_DEFAULT_BUILD 1)
 
 # compiler-specific flags
 IF(CMAKE_C_COMPILER_ID MATCHES "GNU")
-  set_property(TARGET test_variant PROPERTY COMPILE_OPTIONS -Wall -Wextra -pedantic)
+  set_property(TARGET test_variant PROPERTY COMPILE_OPTIONS -g -Wall -Wextra -pedantic)
 ENDIF()

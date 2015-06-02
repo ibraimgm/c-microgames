@@ -63,7 +63,7 @@ set_property(TARGET consio PROPERTY C_STANDARD_REQUIRED ON)
 
 # compiler-specific flags
 IF(CMAKE_C_COMPILER_ID MATCHES "GNU")
-  set_property(TARGET consio PROPERTY COMPILE_OPTIONS -Wall -Wextra -pedantic)
+  set_property(TARGET consio PROPERTY COMPILE_OPTIONS -g -Wall -Wextra -pedantic)
 ENDIF()
 
 IF(MSVC)
